@@ -755,20 +755,20 @@ HTML_TEMPLATE = '''
 
             const groupedData = {};
             history.forEach(record => {
-                const date = record.timestamp.split(' ')[0];
+                const hour = record.timestamp.substring(0, 13) + ':00';
                 record.models.forEach(m => {
                     if (!groupedData[m.model_name]) {
                         groupedData[m.model_name] = {};
                     }
-                    if (!groupedData[m.model_name][date]) {
-                        groupedData[m.model_name][date] = { used: 0, total: 0 };
+                    if (!groupedData[m.model_name][hour]) {
+                        groupedData[m.model_name][hour] = { used: 0, total: 0 };
                     }
-                    groupedData[m.model_name][date].used += m.used;
-                    groupedData[m.model_name][date].total += m.total;
+                    groupedData[m.model_name][hour].used += m.used;
+                    groupedData[m.model_name][hour].total += m.total;
                 });
             });
 
-            const allDates = [...new Set(history.map(r => r.timestamp.split(' ')[0]))].sort();
+            const allHours = [...new Set(history.map(r => r.timestamp.substring(0, 13) + ':00'))].sort();
             
             const colors = [
                 { border: 'rgb(0, 212, 255)', bg: 'rgba(0, 212, 255, 0.1)' },
@@ -779,8 +779,8 @@ HTML_TEMPLATE = '''
             ];
 
             const datasets = Object.keys(groupedData).map((modelName, idx) => {
-                const data = allDates.map(date => {
-                    const record = groupedData[modelName][date];
+                const data = allHours.map(hour => {
+                    const record = groupedData[modelName][hour];
                     return record ? Math.round(record.used) : null;
                 });
                 const color = colors[idx % colors.length];
@@ -802,7 +802,7 @@ HTML_TEMPLATE = '''
             trendChart = new Chart(canvas, {
                 type: 'line',
                 data: {
-                    labels: allDates,
+                    labels: allHours,
                     datasets: datasets
                 },
                 options: {
