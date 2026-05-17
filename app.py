@@ -75,6 +75,8 @@ def record_token_data():
     
     for m in data.get("model_remains", []):
         total = m.get("current_interval_total_count", 0)
+        if total == 0:
+            continue
         remaining = m.get("current_interval_usage_count", 0)
         used = total - remaining
         
@@ -873,6 +875,8 @@ def api_tokens():
     models = []
     for m in data.get("model_remains", []):
         total = m.get("current_interval_total_count", 0)
+        if total == 0:
+            continue
         remaining = m.get("current_interval_usage_count", 0)  # API字段名是usage，实际是剩余量
         used = total - remaining
         percentage = (used / total * 100) if total > 0 else 0
