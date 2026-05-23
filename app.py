@@ -108,9 +108,9 @@ def run_scheduler():
     while True:
         now = datetime.now()
         minute = now.minute
-        second = now.second
+        hour = now.hour
         
-        if minute == 58 and second < 60:
+        if minute == 58 and hour in [4, 9, 14, 19, 23]:
             record_token_data()
             time.sleep(60)
         
